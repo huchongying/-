@@ -1,11 +1,8 @@
-
 import os
 import tkinter as tk
 from tkinter import messagebox
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
-
 
 # Create GUI
 root = tk.Tk()
@@ -54,7 +51,12 @@ def connect_wifi_and_open_webpage():
     
     except:
         messagebox.showinfo('提示','连接wifi失败？')
-
+def save_user_info():
+        with open("user_info.txt", "w") as f:
+            f.write(username_entry.get() + "\n")
+            f.write(password_entry.get() + "\n")
+        connect_wifi_and_open_webpage()
+        root.after(300, close_window)
 # Load username and password
 if os.path.exists("user_info.txt"):
     with open("user_info.txt", "r") as f:
@@ -67,16 +69,19 @@ if os.path.exists("user_info.txt"):
 else:
     username = ""
     password = ""
+# 当我第一次登录程序的时候，我需要保存数据到文件里啊
+    save_button = tk.Button(root, text="保存", command=save_user_info)
+    save_button.pack(pady=10)
 
 
-        
-    
-def one_click():
-    if username_entry.get() and password_entry.get():
-        connect_wifi_and_open_webpage()
-        root.after(300, close_window)     
-    else:
-        print("请输入用户名和密码")
+
+    def one_click():
+        if username_entry.get() and password_entry.get():
+            save_user_info()
+        else:
+            print("请输入用户名和密码")
+
+    one_click()
 
 root.mainloop()
 
